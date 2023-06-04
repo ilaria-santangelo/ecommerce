@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    padding: 20px 0;
+    color: #333;
+}
+
+.order-item {
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    width: 80%;
+    margin: 20px auto;
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+}
+
+.order-item h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.order-item p {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.order-item::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+@media screen and (min-width: 700px) {
+    .order-item {
+        width: 60%;
+    }
+}
+.order-item-product {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+}

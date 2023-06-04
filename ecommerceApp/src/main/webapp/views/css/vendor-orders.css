@@ -16,6 +16,13 @@ body {
     margin-bottom: 20px;
 }
 
+.order-item-product {
+    margin-left: 40px;
+    border: 1px solid gray;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
 .products-container {
     margin-top: 10px;
 }

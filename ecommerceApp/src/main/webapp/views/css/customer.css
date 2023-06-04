@@ -1,10 +1,9 @@
 body {
     font-family: 'Jost', sans-serif;
-    margin: 0;
-    padding: 0;
     background-color: #FAFAFA;
     box-sizing: border-box;
 }
+
 
 .sidebar {
     background-color: #573b8a;
@@ -14,10 +13,6 @@ body {
     height: 100vh;
     overflow: auto;
     padding: 20px;
-}
-
-.sidebar h2 {
-    margin-top: 0;
 }
 
 .sidebar a {
@@ -37,35 +32,24 @@ body {
 }
 
 .main {
-    margin-left: 200px;
     padding: 20px;
 }
 
-.main h2 {
-    margin-top: 0;
-}
-
-.cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-}
-
 .product-card {
-    flex: 0 0 calc(33.33% - 2em);
-    margin: 1em;
-    padding: 1em;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
+    display: inline-block;
+    margin-top: 3em;    
+    margin-right: 2em;
     overflow: hidden;
-    text-align: center;
-    transition: 0.3s;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2); /* Shadow effect */
+    text-align: center; /* Center the text horizontally */
+    transition: 0.3s; /* Add a transition effect when hovering over the card */
 }
 
 .product-card img {
     width: 100%;
-    border-radius: 5px;
+    border-radius: 15px 15px 0 0; /* Rounded corners at the top */
 }
 
 .product-card h3 {
@@ -89,6 +73,163 @@ body {
     transition: 0.3s;
 }
 
+.cart-item .delete-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f44336; /* red */
+    color: #fff; /* white */
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px; /* add some margin at the top */
+}
+
+.cart-item.delete-btn:hover {
+    background-color: #d32f2f; /* dark red */
+}
+
 .product-card button:hover {
     background-color: #777;
+}
+.checkout-btn {
+    width: 100%;
+    height: 3em;
+    display: block;
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(to right, #6d44b8, #7744aa); /* gradient background */
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px; /* bigger font size */
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1); /* box-shadow for 3D effect */
+}
+
+.checkout-btn:hover {
+    background: linear-gradient(to right, #7744aa, #6d44b8); /* reverse gradient on hover */
+    box-shadow: 0 12px 20px rgba(0,0,0,0.2); /* bigger box-shadow on hover */
+}
+
+.checkout-btn:focus {
+    outline: none; /* remove the default outline */
+    box-shadow: 0 0 10px #7744aa; /* add a glow effect */
+}
+
+.cart-item {
+    width: 85%;
+    height:auto;
+    background: rgba(255, 255, 255, 0.1); /* semi-transparent background */
+    color: #333; /* white text */
+    border-radius: 15px; /* rounded corners */
+    padding: 1em; /* space inside the card */
+    margin-bottom: 1em; /* space between cards */
+    display: inline-flexbox; /* aligns the child elements (product name, quantity, and price) in a row */
+    align-items: center; /* vertically centers the child elements in the card */
+    justify-content: center; /* distributes extra space evenly between the child elements */
+    font-family: 'Jost', sans-serif; /* applies the Jost font */
+    border: 1px solid #DDD; /* light grey border */
+}
+
+.product-name {
+    flex: 1; /* takes up as much space as it can */
+}
+
+.product-quantity {
+    display: flex; /* aligns the quantity and buttons in a row */
+    align-items: center; /* vertically centers the quantity and buttons */
+}
+
+.product-quantity button {
+    background: #6d44b8; /* matches the background color of the sidebar links */
+    color: #fff; /* white text */
+    border: none; /* removes the default button border */
+    padding: 5px 10px; /* space inside the button */
+    margin: 0 5px; /* space around the button */
+    border-radius: 5px; /* rounded corners */
+    cursor: pointer; /* changes the mouse cursor when hovering over the button */
+    transition: background 0.3s; /* animates the background color */
+}
+
+.product-quantity button:hover {
+    background: #7744aa; /* changes the background color when hovering over the button */
+}
+
+.product-price {
+    font-weight: bold; /* makes the price bold */
+}
+
+.product-name {
+    flex: 3;
+}
+
+.product-quantity {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.product-price {
+    flex: 1;
+    text-align: right;
+}
+
+.product-card select {
+    width: 50px;
+    height: 30px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 10px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+}
+
+.total-price {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: right;
+}
+
+.product-card button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+header {
+    display: flex;
+    justify-content: right;
+    padding: 10px 20px;
+    background-color: #f4f4f4;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#cart-icon {
+    cursor: pointer;
+    margin-left: 2em;
+    
+}
+
+#orders-icon {
+    cursor: pointer;
+}
+
+#cart-container {
+    position: absolute;
+    top: 60px; /* adjust as needed */
+    right: 20px; /* adjust as needed */
+    width: 300px; /* adjust as needed */
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.hidden {
+    display: none;
 }

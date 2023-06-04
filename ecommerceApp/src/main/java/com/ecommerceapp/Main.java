@@ -9,6 +9,7 @@ import com.ecommerceapp.servlet.RegisterServlet;
 import com.ecommerceapp.servlet.UserServlet;
 import com.ecommerceapp.servlet.ProductServlet;
 import com.ecommerceapp.servlet.GetImageServlet;
+import com.ecommerceapp.servlet.GetOrdersCustomerServlet;
 import com.ecommerceapp.servlet.GetOrdersServlet;
 import com.ecommerceapp.servlet.GetProductServlet;
 import com.ecommerceapp.servlet.GetProductsCustomer;
@@ -59,6 +60,9 @@ public class Main {
 
         Tomcat.addServlet(context, "getProductsCustomer", new GetProductsCustomer());
         context.addServletMappingDecoded("/getProductsCustomer", "getProductsCustomer");
+
+        Tomcat.addServlet(context, "getOrdersCustomerServlet", new GetOrdersCustomerServlet());
+        context.addServletMappingDecoded("/getOrdersCustomerServlet", "getOrdersCustomerServlet");
 
         Tomcat.addServlet(context, "default", new DefaultServlet());
         context.addServletMappingDecoded("/", "default");

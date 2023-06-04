@@ -3,21 +3,31 @@
 <head>
     <title>Profile</title>
     <link rel="stylesheet" type="text/css" href="../views/css/customer.css">
-    <script src="../views/js/customer.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Customer Dashboard</h2>
-        <a href="#">Cart</a>
-        <a href="#">Orders</a>
-        <a href="#">Chat with Vendor</a>
-        <a href="#">Write Review</a>
-    </div>
-    
+    <header>
+        <div id="orders-icon">
+            <img width="64" height="64" src="https://img.icons8.com/pastel-glyph/64/cardboard-box.png" alt="cardboard-box"/>
+        </div>
+        <div id="cart-icon">
+            <img width="64" height="64" src="https://img.icons8.com/pastel-glyph/64/shopping-cart--v2.png" alt="shopping-cart--v2"/> 
+        </div>
+    </header>
+
     <div class="main">
         <h2>Welcome to your Dashboard</h2>
         <div class="cards"></div>
     </div>
+    
+    <div id="cart-container" class="hidden">
+        <h3>Your Cart</h3>
+        <div class="cart-items"></div>
+        <div class="total-price"></div>
+        <button class="checkout-btn" onclick="checkout()">Checkout</button>
+    </div>
+
+    <script src="../views/js/customer.js"></script>
 </body>
 </html>

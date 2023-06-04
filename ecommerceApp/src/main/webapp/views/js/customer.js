@@ -154,9 +154,26 @@ function checkout() {
         console.log(result);
         cart = []; // Clear the cart
         updateCartUI();
-        window.location.href = "/dashboard"; // Redirect to dashboard page
+        window.location.href = "/src/main/webapp/views/customer.html"; // Redirect to dashboard page
     })
     .catch(error => {
         console.error('Error:', error);
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('cart-icon').addEventListener('click', function() {
+        var cartContainer = document.getElementById('cart-container');
+        if (cartContainer.classList.contains('hidden')) {
+            cartContainer.classList.remove('hidden');
+        } else {
+            cartContainer.classList.add('hidden');
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('orders-icon').addEventListener('click', function() {
+        window.location.href = "/src/main/webapp/views/customer-orders.html"; 
+    });
+});

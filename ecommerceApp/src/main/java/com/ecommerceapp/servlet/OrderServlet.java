@@ -78,7 +78,6 @@ public class OrderServlet extends HttpServlet {
             session.setAttribute("cart", cart);
 
             response.setStatus(HttpServletResponse.SC_OK);
-            response.sendRedirect(request.getContextPath() + "src/main/webapp/views/profile.html");
         } catch (SQLException ex) {
             // If any error occurs, rollback changes
             try {
