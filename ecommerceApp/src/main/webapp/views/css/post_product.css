@@ -1,0 +1,46 @@
+body {
+    font-family: 'Jost', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FAFAFA;
+}
+
+.post-product {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.post-product h2 {
+    margin-bottom: 20px;
+    color: #573b8a;
+}
+
+.post-product label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.post-product input, .post-product textarea, .post-product select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.post-product button {
+    background-color: #573b8a;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post-product button:hover {
+    background-color: #6d44b8;
+}

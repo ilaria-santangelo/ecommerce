@@ -1,0 +1,202 @@
+body {
+    font-family: 'Jost', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FAFAFA;
+    box-sizing: border-box;
+}
+
+
+.sidebar {
+    background-color: #573b8a;
+    color: #fff;
+    width: 200px;
+    position: fixed;
+    height: 100vh;
+    overflow: auto;
+    padding: 20px;
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 15px;
+    margin: 10px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #6d44b8;
+    transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #7744aa;
+}
+
+.main {
+    margin-left: 30em;  /* Adjust this to match the width of your sidebar */
+    padding: 20px;
+}
+
+
+
+.product-card {
+    display: inline-block;
+    margin-left: 3em;
+    margin-top: 3em;    
+    margin-right: 2em;
+    overflow: hidden;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2); /* Shadow effect */
+    text-align: center; /* Center the text horizontally */
+    transition: 0.3s; /* Add a transition effect when hovering over the card */
+}
+
+.product-card img {
+    width: 100%;
+    border-radius: 15px 15px 0 0; /* Rounded corners at the top */
+}
+
+.product-card h3 {
+    margin: 0;
+    color: #333;
+}
+
+.product-card p {
+    margin: 10px 0;
+    color: #777;
+}
+
+.product-card button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cart-item .delete-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f44336; /* red */
+    color: #fff; /* white */
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px; /* add some margin at the top */
+}
+
+.cart-item .delete-btn:hover {
+    background-color: #d32f2f; /* dark red */
+}
+
+.product-card button:hover {
+    background-color: #777;
+}
+.checkout-btn {
+    width: 100%;
+    height: 3em;
+    display: block;
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #7744aa;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    text-decoration: none;
+}
+.checkout-btn:hover {
+    background-color: #6d44b8;
+}
+
+
+.cart-item {
+    width: 85%;
+    height:auto;
+    background: rgba(255, 255, 255, 0.1); /* semi-transparent background */
+    color: #fff; /* white text */
+    border-radius: 15px; /* rounded corners */
+    padding: 1em; /* space inside the card */
+    margin-bottom: 1em; /* space between cards */
+    display: inline-flexbox; /* aligns the child elements (product name, quantity, and price) in a row */
+    align-items: center; /* vertically centers the child elements in the card */
+    justify-content: center; /* distributes extra space evenly between the child elements */
+    font-family: 'Jost', sans-serif; /* applies the Jost font */
+}
+
+.product-name {
+    flex: 1; /* takes up as much space as it can */
+}
+
+.product-quantity {
+    display: flex; /* aligns the quantity and buttons in a row */
+    align-items: center; /* vertically centers the quantity and buttons */
+}
+
+.product-quantity button {
+    background: #6d44b8; /* matches the background color of the sidebar links */
+    color: #fff; /* white text */
+    border: none; /* removes the default button border */
+    padding: 5px 10px; /* space inside the button */
+    margin: 0 5px; /* space around the button */
+    border-radius: 5px; /* rounded corners */
+    cursor: pointer; /* changes the mouse cursor when hovering over the button */
+    transition: background 0.3s; /* animates the background color */
+}
+
+.product-quantity button:hover {
+    background: #7744aa; /* changes the background color when hovering over the button */
+}
+
+.product-price {
+    font-weight: bold; /* makes the price bold */
+}
+
+.product-name {
+    flex: 3;
+}
+
+.product-quantity {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.product-price {
+    flex: 1;
+    text-align: right;
+}
+
+.product-card select {
+    width: 50px;
+    height: 30px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 10px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+}
+
+.total-price {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: right;
+}
+
+.product-card button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+
