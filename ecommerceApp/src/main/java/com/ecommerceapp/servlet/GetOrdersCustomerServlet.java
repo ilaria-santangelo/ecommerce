@@ -31,10 +31,10 @@ public class GetOrdersCustomerServlet extends HttpServlet {
         Connection connection = DatabaseManager.getConnection();
         try {
             Statement statement = connection.createStatement();
-            String sql = "SELECT Orders.ID as orderId, Orders.order_date, Orders.status, OrderItems.quantity, OrderItems.price, Products.product_name FROM Orders INNER JOIN OrderItems ON Orders.ID = OrderItems.order_id INNER JOIN Products ON OrderItems.product_id = Products.ID WHERE Orders.customer_id = " + customerId;
+            String sql = "SELECT Orders.ID as orderId, Orders.order_date, Orders.status, OrderItems.quantity, OrderItems.price, Products.product_name, Reviews.ID as reviewId FROM Orders INNER JOIN OrderItems ON Orders.ID = OrderItems.order_id INNER JOIN Products ON OrderItems.product_id = Products.ID LEFT JOIN Reviews ON OrderItems.ID = Reviews.order_item_id WHERE Orders.customer_id = " + customerId;
 
             ResultSet resultSet = statement.executeQuery(sql);
-
+            
             List<Map<String, Object>> orders = new ArrayList<>();
             while (resultSet.next()) {
                 Map<String, Object> order = new HashMap<>();
@@ -44,9 +44,12 @@ public class GetOrdersCustomerServlet extends HttpServlet {
                 order.put("quantity", resultSet.getInt("quantity"));
                 order.put("price", resultSet.getDouble("price"));
                 order.put("productName", resultSet.getString("product_name"));
-
+                // If the product has been reviewed, the reviewId will not be null
+                order.put("reviewed", resultSet.getInt("reviewId") != 0);
+            
                 orders.add(order);
             }
+            
 
             String json = new Gson().toJson(orders);
             response.setContentType("application/json");

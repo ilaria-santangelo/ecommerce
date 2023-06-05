@@ -38,6 +38,30 @@ document.addEventListener('DOMContentLoaded', (event) => {
         .catch(err => console.error(err));
 });
 
+document.querySelector('.review-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    let productId = event.target.elements.productId.value;
+    let rating = event.target.elements.rating.value;
+    let comment = event.target.elements.comment.value;
+
+    submitReview(productId, rating, comment);
+});
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    // Check if reviewSubmitted query parameter is present and true
+    const urlParams = new URLSearchParams(window.location.search);
+    const reviewSubmitted = urlParams.get('reviewSubmitted');
+    if (reviewSubmitted === 'true') {
+        // Display a "Review Submitted" message
+        const reviewMessage = document.createElement('div');
+        reviewMessage.textContent = 'Review Submitted';
+        reviewMessage.style.color = 'green';
+        document.body.prepend(reviewMessage);
+    }
+});
+
+// Create a new order item HTML string
 // Create a new order item HTML string
 function createOrderItem(order) {
     let itemsHtml = order.items.map(item => `
@@ -45,6 +69,18 @@ function createOrderItem(order) {
             <p>Product Name: ${item.productName}</p>
             <p>Quantity: ${item.quantity}</p>
             <p>Price: ${item.price}</p>
+            <form class="review-form" onsubmit="submitReview(event, ${item.id})">
+            <textarea name="reviewText" placeholder="Write your review here"></textarea>
+            <select name="starRating">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <button type="submit">Submit Review</button>
+        </form>
+        
         </div>
     `).join('');
 
@@ -57,3 +93,34 @@ function createOrderItem(order) {
         </div>
     `;
 }
+
+document.querySelector('.review-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    let productId = event.target.elements.productId.value;
+    let rating = event.target.elements.rating.value;
+    let comment = event.target.elements.comment.value;
+
+    submitReview(productId, rating, comment);
+});
+
+
+function submitReview(productId, rating, comment) {
+    fetch('/reviewServlet', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `productId=${productId}&rating=${rating}&comment=${encodeURIComponent(comment)}`
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        alert("Review submitted successfully!");
+    })
+    .catch(err => alert("An error occurred while submitting the review: " + err));
+}
+
+
+

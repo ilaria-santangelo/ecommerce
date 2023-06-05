@@ -6,6 +6,7 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.servlets.DefaultServlet;
 
 import com.ecommerceapp.servlet.RegisterServlet;
+import com.ecommerceapp.servlet.ReviewServlet;
 import com.ecommerceapp.servlet.UserServlet;
 import com.ecommerceapp.servlet.ProductServlet;
 import com.ecommerceapp.servlet.GetImageServlet;
@@ -63,6 +64,9 @@ public class Main {
 
         Tomcat.addServlet(context, "getOrdersCustomerServlet", new GetOrdersCustomerServlet());
         context.addServletMappingDecoded("/getOrdersCustomerServlet", "getOrdersCustomerServlet");
+
+        Tomcat.addServlet(context, "reviewServlet", new ReviewServlet());
+        context.addServletMappingDecoded("/reviewServlet", "reviewServlet");
 
         Tomcat.addServlet(context, "default", new DefaultServlet());
         context.addServletMappingDecoded("/", "default");
