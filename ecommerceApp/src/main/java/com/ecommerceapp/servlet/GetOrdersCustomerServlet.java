@@ -31,23 +31,31 @@ public class GetOrdersCustomerServlet extends HttpServlet {
         Connection connection = DatabaseManager.getConnection();
         try {
             Statement statement = connection.createStatement();
-            String sql = "SELECT Orders.ID as orderId, Orders.order_date, Orders.status, OrderItems.quantity, OrderItems.price, Products.product_name, Reviews.ID as reviewId FROM Orders INNER JOIN OrderItems ON Orders.ID = OrderItems.order_id INNER JOIN Products ON OrderItems.product_id = Products.ID LEFT JOIN Reviews ON OrderItems.ID = Reviews.order_item_id WHERE Orders.customer_id = " + customerId;
-
+            String sql = "SELECT Orders.ID as orderId, Orders.order_date, Orders.status, " +
+            "OrderItems.ID as orderItemId, OrderItems.quantity, OrderItems.price, Products.product_name, " +
+            "Reviews.review_text, Reviews.star_rating " +
+            "FROM Orders " +
+            "INNER JOIN OrderItems ON Orders.ID = OrderItems.order_id " +
+            "INNER JOIN Products ON OrderItems.product_id = Products.ID " +
+            "LEFT JOIN Reviews ON OrderItems.ID = Reviews.order_item_id " +
+            "WHERE Orders.customer_id = " + customerId;
+        
             ResultSet resultSet = statement.executeQuery(sql);
             
             List<Map<String, Object>> orders = new ArrayList<>();
             while (resultSet.next()) {
                 Map<String, Object> order = new HashMap<>();
-                order.put("id", resultSet.getInt("orderId"));
-                order.put("orderDate", resultSet.getTimestamp("order_date"));
-                order.put("status", resultSet.getString("status"));
-                order.put("quantity", resultSet.getInt("quantity"));
-                order.put("price", resultSet.getDouble("price"));
-                order.put("productName", resultSet.getString("product_name"));
-                // If the product has been reviewed, the reviewId will not be null
-                order.put("reviewed", resultSet.getInt("reviewId") != 0);
-            
-                orders.add(order);
+order.put("id", resultSet.getInt("orderId"));
+order.put("orderItemId", resultSet.getInt("orderItemId"));
+order.put("orderDate", resultSet.getTimestamp("order_date"));
+order.put("status", resultSet.getString("status"));
+order.put("quantity", resultSet.getInt("quantity"));
+order.put("price", resultSet.getDouble("price"));
+order.put("productName", resultSet.getString("product_name"));
+order.put("reviewText", resultSet.getString("review_text"));
+order.put("starRating", resultSet.getInt("star_rating"));
+orders.add(order);
+
             }
             
 
