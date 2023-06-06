@@ -177,3 +177,29 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = "/src/main/webapp/views/customer-orders.html"; 
     });
 });
+
+
+function searchProduct() {
+    const searchQuery = document.getElementById('searchBar').value;
+    fetch('/searchProductCustomerServlet', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `query=${searchQuery}`,
+    })
+    .then(response => {
+        if (!response.ok) { 
+            throw new Error(response.statusText);
+        }
+        return response.json();
+    })
+    .then(products => {
+        document.querySelector('.cards').innerHTML = '';
+        for (let product of products) {
+            let cardHtml = createProductCard(product);
+            document.querySelector('.cards').insertAdjacentHTML('beforeend', cardHtml);
+        }
+    })
+    .catch(err => console.error(err));
+}
