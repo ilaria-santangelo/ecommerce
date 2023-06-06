@@ -1,5 +1,7 @@
 package com.ecommerceapp.security;
 
+import com.ecommerceapp.utility.StringUtils;
+
 import javax.crypto.KeyAgreement;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
@@ -55,5 +57,14 @@ public class KeyExchange {
         } catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String toBinaryString(Key key) {
+        byte[] bytes = key.getEncoded();
+        StringBuilder stringBuilder = new StringBuilder();
+        for(byte value : bytes) {
+            stringBuilder.append(StringUtils.toBinaryString(value));
+        }
+        return stringBuilder.toString();
     }
 }

@@ -29,6 +29,15 @@ public class StringUtils {
         return text.chars().mapToObj(i -> String.format("%8s", Integer.toBinaryString(i)).replaceAll(" ", "0")).collect(Collectors.joining());
     }
 
+    public static String zeroPadding(String binaryString, int size) {
+        int m = binaryString.length() % size;
+        if(m > 0) {
+            int zerosToAdd = size - m;
+            binaryString = binaryString + "0".repeat(Math.max(0, zerosToAdd));
+        }
+        return binaryString;
+    }
+
     /**
      * Converts a binary string (a string made of zeros and ones) into a text string.
      *

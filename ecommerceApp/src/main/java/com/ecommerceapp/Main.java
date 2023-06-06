@@ -1,21 +1,10 @@
 package com.ecommerceapp;
 
+import com.ecommerceapp.servlet.*;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.servlets.DefaultServlet;
-
-import com.ecommerceapp.servlet.RegisterServlet;
-import com.ecommerceapp.servlet.ReviewServlet;
-import com.ecommerceapp.servlet.UserServlet;
-import com.ecommerceapp.servlet.ProductServlet;
-import com.ecommerceapp.servlet.GetImageServlet;
-import com.ecommerceapp.servlet.GetOrdersCustomerServlet;
-import com.ecommerceapp.servlet.GetOrdersServlet;
-import com.ecommerceapp.servlet.GetProductServlet;
-import com.ecommerceapp.servlet.GetProductsCustomer;
-import com.ecommerceapp.servlet.GetSingleProductServlet;
-import com.ecommerceapp.servlet.OrderServlet;
 
 import java.io.File;
 
@@ -28,7 +17,7 @@ public class Main {
         tomcat.getConnector();
 
         String contextPath = "";
-        String docBase = new File("ecommerceApp").getAbsolutePath();
+        String docBase = new File("").getAbsolutePath();
 
         Context context = tomcat.addContext(contextPath, docBase);
 
@@ -70,6 +59,9 @@ public class Main {
 
         Tomcat.addServlet(context, "default", new DefaultServlet());
         context.addServletMappingDecoded("/", "default");
+
+        Tomcat.addServlet(context, "chat", new ChatServlet());
+        context.addServletMappingDecoded("/chat", "chat");
 
         tomcat.start();
         System.out.println("📡 HTTP Tomcat Embedded listening on port 8080!");

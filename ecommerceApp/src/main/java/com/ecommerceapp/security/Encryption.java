@@ -135,7 +135,7 @@ public class Encryption {
     public static String encryptECB(String plainText, String key) {
         String[] subKeys = generateSubKeys(key);
         StringBuilder cypherText = new StringBuilder();
-        for(String block : StringUtils.splitBySize(StringUtils.toBinaryString(plainText), 64)) {
+        for(String block : StringUtils.splitBySize(StringUtils.zeroPadding(StringUtils.toBinaryString(plainText), 64), 64)) {
             cypherText.append(performRounds(StringUtils.permute(block, IP), subKeys));
         }
         return cypherText.toString();
@@ -153,7 +153,7 @@ public class Encryption {
     public static String encryptCBC(String plainText, String key, String vector) {
         String[] subKeys = generateSubKeys(key);
         StringBuilder cypherText = new StringBuilder();
-        for(String block : StringUtils.splitBySize(StringUtils.toBinaryString(plainText), 64)) {
+        for(String block : StringUtils.splitBySize(StringUtils.zeroPadding(StringUtils.toBinaryString(plainText), 64), 64)) {
             String encrypted = performRounds(StringUtils.permute(StringUtils.xor(block, vector), IP), subKeys);
             vector = encrypted;
             cypherText.append(encrypted);
@@ -171,7 +171,7 @@ public class Encryption {
     public static String decryptECB(String cypherText, String key) {
         String[] subKeys = generateSubKeys(key, true);
         StringBuilder plainText = new StringBuilder();
-        for(String block : StringUtils.splitBySize(cypherText, 64)) {
+        for(String block : StringUtils.splitBySize(StringUtils.zeroPadding(cypherText, 64), 64)) {
             plainText.append(performRounds(StringUtils.permute(block, IP), subKeys));
         }
         return StringUtils.binaryToText(plainText.toString());
@@ -188,7 +188,7 @@ public class Encryption {
     public static String decryptCBC(String cypherText, String key, String vector) {
         String[] subKeys = generateSubKeys(key, true);
         StringBuilder plainText = new StringBuilder();
-        for(String block : StringUtils.splitBySize(cypherText, 64)) {
+        for(String block : StringUtils.splitBySize(StringUtils.zeroPadding(cypherText, 64), 64)) {
             String decrypted = StringUtils.xor(performRounds(StringUtils.permute(block, IP), subKeys), vector);
             vector = block;
             plainText.append(decrypted);
