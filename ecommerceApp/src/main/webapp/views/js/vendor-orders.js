@@ -22,7 +22,11 @@ window.onload = function() {
                 ordersMap[item.id].items.push({
                     productName: item.productName,
                     quantity: item.quantity,
-                    price: item.price
+                    price: item.price,
+                    review: item.review,
+                    rating: item.rating,
+                    reply: item.reply,
+                    orderItemId: item.orderItemId
                 });
             }
 
@@ -32,13 +36,21 @@ window.onload = function() {
                 let orderCard = document.createElement('div');
                 orderCard.className = 'order-card';
                 
+                
                 let itemsHtml = ordersMap[id].items.map(item => `
-                    <div class="order-item-product">
-                        <p>Product Name: ${item.productName}</p>
-                        <p>Quantity: ${item.quantity}</p>
-                        <p>Price: ${item.price}</p>
-                    </div>
-                `).join('');
+                <div class="order-item-product">
+                    <p>Product Name: ${item.productName}</p>
+                    <p>Quantity: ${item.quantity}</p>
+                    <p>Price: ${item.price}</p>
+                    ${item.review ? `<p class="review">Review: ${item.review}</p><p class="rating">Rating: ${item.rating}</p>${item.reply ? `<p class="reply">Reply: ${item.reply}</p>` : 
+                        `<form class="reply-form" onsubmit="submitReply(event, ${item.orderItemId})">
+                            <textarea name="replyText" placeholder="Write your reply here"></textarea>
+                            <button type="submit">Submit Reply</button>
+                        </form>
+                    `}` : ''}
+                </div>
+            `).join('');
+            
 
                 orderCard.innerHTML = `
                     <h3>Order ID: ${ordersMap[id].id}</h3>
@@ -52,3 +64,29 @@ window.onload = function() {
         })
         .catch(error => console.error(error));
 };
+
+function submitReply(event, orderItemId) {
+  event.preventDefault();
+
+  let replyText = event.target.elements.namedItem("replyText").value;
+
+  let formdata = new URLSearchParams();
+  formdata.append("orderItemId", orderItemId);
+  formdata.append("replyText", replyText);
+
+  fetch("/replyServlet", {
+    method: "POST",
+    body: formdata,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      alert("Reply Submitted");
+
+      event.target.innerHTML = `
+        <p><strong>Reply Submitted:</strong> ${replyText}</p>
+    `;
+    })
+    .catch((err) => console.error(err));
+}

@@ -6,6 +6,7 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.servlets.DefaultServlet;
 
 import com.ecommerceapp.servlet.RegisterServlet;
+import com.ecommerceapp.servlet.ReplyServlet;
 import com.ecommerceapp.servlet.ReviewServlet;
 import com.ecommerceapp.servlet.UserServlet;
 import com.ecommerceapp.servlet.ProductServlet;
@@ -70,7 +71,9 @@ public class Main {
 
         Tomcat.addServlet(context, "default", new DefaultServlet());
         context.addServletMappingDecoded("/", "default");
-
+        
+        Tomcat.addServlet(context, "replyServlet", new ReplyServlet());
+        context.addServletMappingDecoded("/replyServlet", "replyServlet");
         tomcat.start();
         System.out.println("📡 HTTP Tomcat Embedded listening on port 8080!");
         tomcat.getServer().await();

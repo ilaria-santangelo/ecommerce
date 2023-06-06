@@ -26,12 +26,12 @@ import com.google.gson.Gson;
 public class GetOrdersServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        int vendorID = (int) session.getAttribute("userId");
+        int vendorId = (int) session.getAttribute("userId");
 
         Connection connection = DatabaseManager.getConnection();
         try {
             Statement statement = connection.createStatement();
-            String sql = "SELECT Orders.ID as orderId, Orders.order_date, Orders.status, OrderItems.quantity, OrderItems.price, Products.product_name FROM Orders INNER JOIN OrderItems ON Orders.ID = OrderItems.order_id INNER JOIN Products ON OrderItems.product_id = Products.ID WHERE Products.vendor_id = " + vendorID;
+            String sql = "SELECT Orders.ID as orderId, Orders.order_date, Orders.status, OrderItems.ID as orderItemId, OrderItems.quantity, OrderItems.price, Products.product_name, Reviews.review_text, Reviews.star_rating, Reviews.reply FROM Orders INNER JOIN OrderItems ON Orders.ID = OrderItems.order_id INNER JOIN Products ON OrderItems.product_id = Products.ID LEFT JOIN Reviews ON OrderItems.ID = Reviews.order_item_id WHERE Products.vendor_id = " + vendorId;
 
             ResultSet resultSet = statement.executeQuery(sql);
 
@@ -44,6 +44,10 @@ public class GetOrdersServlet extends HttpServlet {
                 order.put("quantity", resultSet.getInt("quantity"));
                 order.put("price", resultSet.getDouble("price"));
                 order.put("productName", resultSet.getString("product_name"));
+                order.put("review", resultSet.getString("review_text"));
+                order.put("rating", resultSet.getInt("star_rating"));
+                order.put("reply", resultSet.getString("reply"));
+                order.put("orderItemId", resultSet.getInt("orderItemId"));
 
                 orders.add(order);
             }
