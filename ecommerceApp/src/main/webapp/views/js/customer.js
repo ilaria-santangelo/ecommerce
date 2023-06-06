@@ -47,9 +47,11 @@ function createProductCard(product) {
                 <option value="10">10</option>
             </select>
             <button class="add-to-cart-btn" data-id="${product.ID}">Add to Cart</button>
+            <button class="chat-with-vendor-btn" data-id="${product.ID}" onclick="chatWithVendor(${product.ID})">Chat with Vendor</button>
         </div>
     `;
 }
+
 
 let cart = [];
 
@@ -202,4 +204,11 @@ function searchProduct() {
         }
     })
     .catch(err => console.error(err));
+}
+
+
+function chatWithVendor(vendorId) {
+    // Logic to start a chat with the vendor
+    // This can be as simple as redirecting to a chat page or as complex as opening a chat widget.
+    window.location.href = "/src/main/webapp/views/chat.html"; 
 }
