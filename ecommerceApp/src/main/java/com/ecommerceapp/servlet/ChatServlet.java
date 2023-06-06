@@ -8,20 +8,33 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import javax.crypto.KeyAgreement;
+import java.io.IOException;
 import java.security.Key;
 import java.security.KeyPair;
 
 @WebServlet("chat")
 public class ChatServlet extends HttpServlet {
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-		KeyPair aliceKey = KeyExchange.generateKeys();
-		KeyPair bobKey = KeyExchange.generateKeys();
-		KeyAgreement aliceAgreement = KeyExchange.generateAgreement(aliceKey.getPrivate());
-		KeyAgreement bobAgreement = KeyExchange.generateAgreement(bobKey.getPrivate());
-		Key sharedKey1 = KeyExchange.generateSymmetricKey(aliceAgreement, bobKey.getPublic());
-		Key sharedKey2 = KeyExchange.generateSymmetricKey(bobAgreement, aliceKey.getPublic());
-		String binaryKey = KeyExchange.toBinaryString(sharedKey1);
-		String encrypted = Encryption.encryptECB("This is a test", binaryKey);
+	private Key sharedKey = null;
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		KeyPair keyA = KeyExchange.generateKeys();
+		KeyPair keyB = KeyExchange.generateKeys();
+		KeyAgreement agreementA = KeyExchange.generateAgreement(keyA.getPrivate());
+		this.sharedKey = KeyExchange.generateSymmetricKey(agreementA, keyB.getPublic());
+		response.sendRedirect(request.getContextPath() + "/src/main/webapp/views/chat.html");
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		if(this.sharedKey != null) {
+			String plainText = request.getParameter("message");
+			String encryptedText = Encryption.encryptECB(plainText, KeyExchange.toBinaryString(this.sharedKey));
+			System.out.println(encryptedText); // TODO: Send message
+		} else {
+			System.out.println("Null!");
+		}
+		response.sendRedirect(request.getContextPath() + "/src/main/webapp/views/chat.html");
 	}
 }
