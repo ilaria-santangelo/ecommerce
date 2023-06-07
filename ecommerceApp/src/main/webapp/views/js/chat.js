@@ -1,44 +1,3 @@
-function sendMessage() {
-    const messageInput = document.querySelector('#messageInput');
-    const message = messageInput.value;
-    messageInput.value = '';
-
-    // Get userId and vendorId from the URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userId');
-    const vendorId = urlParams.get('vendorId');
-
-    fetch('/chatServlet', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `message=${message}&userId=${userId}&vendorId=${vendorId}`,
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error(response.statusText);
-        }
-        console.log(`Message sent: ${message}`);
-        return response.json();
-    })
-    .catch(err => console.error(err));
-}
-
-
-
-// Call receiveMessages() once when the page loads
-document.addEventListener('DOMContentLoaded', receiveMessages);
-
-// Call receiveMessages() again after sending a new message
-document.querySelector('#sendButton').addEventListener('click', function() {
-    sendMessage();
-    receiveMessages();
-});
-
-document.querySelector('#sendButton').addEventListener('click', sendMessage);
-
-
-
 function receiveMessages() {
     fetch('/chatServlet', {
         method: 'GET'
@@ -71,9 +30,5 @@ function receiveMessages() {
     .catch(err => console.error(err));
 }
 
-
-
-
-
-// Call receiveMessages() every 5 seconds
-setInterval(receiveMessages, 5000);
+// Call receiveMessages() every second
+setInterval(receiveMessages, 1000);

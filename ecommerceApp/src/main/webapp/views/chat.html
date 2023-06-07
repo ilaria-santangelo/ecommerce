@@ -7,9 +7,9 @@
 <body>
     <div id="messages" class="message-container"></div>
 
-    <form id="chatbox">
-        <input type="text" id="messageInput" placeholder="Type a message...">
-        <button id="sendButton" type="submit">Send</button>
+    <form id="chatbox" action="/chatServlet" method="post">
+        <input type="text" id="messageInput" name="message" placeholder="Type a message...">
+        <input type="submit" name="send" value="Send" />
     </form>
 
     <script src="../views/js/chat.js"></script>

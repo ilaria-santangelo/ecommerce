@@ -31,6 +31,7 @@ public class ChatServlet extends HttpServlet {
         
         messages.add(message);
         resp.setStatus(HttpServletResponse.SC_OK);
+        resp.sendRedirect(req.getContextPath() + "/src/main/webapp/views/chat.html");
     }
 
     @Override
