@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 function createProductCard(product) {
+    const userId = product.userId;
+    
+
     return `
         <div class="product-card">
             <img src="/getImageServlet?ID=${product.ID}">
@@ -47,8 +50,8 @@ function createProductCard(product) {
                 <option value="10">10</option>
             </select>
             <button class="add-to-cart-btn" data-id="${product.ID}">Add to Cart</button>
-            <button class="chat-with-vendor-btn" data-id="${product.ID}" onclick="chatWithVendor(${product.ID})">Chat with Vendor</button>
-        </div>
+            <button class="chat-with-vendor-btn" data-id="${product.ID}" data-vendor-id="${product.vendor_id}" onclick="chatWithVendor(${userId}, ${product.vendor_id})">Chat with Vendor</button>
+            </div>
     `;
 }
 
@@ -207,8 +210,10 @@ function searchProduct() {
 }
 
 
-function chatWithVendor(vendorId) {
-    // Logic to start a chat with the vendor
-    // This can be as simple as redirecting to a chat page or as complex as opening a chat widget.
-    window.location.href = "/src/main/webapp/views/chat.html"; 
+
+
+
+function chatWithVendor(userId, vendorId) {
+    alert(`User ID: ${userId}, Vendor ID: ${vendorId}`);
+    window.location.href = `/src/main/webapp/views/chat.html?userId=${userId}&vendorId=${vendorId}`; 
 }

@@ -27,14 +27,15 @@ public class GetProductsCustomer extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         int userId = (int) session.getAttribute("userId");
+        System.out.println("userId: " + userId);
 
         Connection connection = DatabaseManager.getConnection();
         try {
             Statement statement = connection.createStatement();
 
-            String sql = "SELECT * FROM Products";
+            String sql = "SELECT Products.*, Vendors.user_id FROM Products JOIN Vendors ON Products.vendor_id = Vendors.user_id";
             ResultSet resultSet = statement.executeQuery(sql);
-            String json = resultSetToJson(resultSet);
+            String json = resultSetToJson(resultSet, userId);
             
             // Send JSON response
             response.setContentType("application/json");
@@ -46,7 +47,7 @@ public class GetProductsCustomer extends HttpServlet {
         }
     }
 
-    private String resultSetToJson(ResultSet resultSet) throws SQLException {
+    private String resultSetToJson(ResultSet resultSet, int userId) throws SQLException {
         JsonArray jsonArray = new JsonArray();
     
         ResultSetMetaData metadata = resultSet.getMetaData();
@@ -59,6 +60,8 @@ public class GetProductsCustomer extends HttpServlet {
                 String columnName = metadata.getColumnName(i);
                 jsonObject.addProperty(columnName, resultSet.getString(i));
             }
+            
+            jsonObject.addProperty("userId", userId); // Add userId to the JSON object
     
             jsonArray.add(jsonObject);
         }
@@ -66,3 +69,4 @@ public class GetProductsCustomer extends HttpServlet {
         return jsonArray.toString();
     }
 }
+

@@ -12,6 +12,7 @@ import com.ecommerceapp.servlet.SearchProductCustomerServlet;
 import com.ecommerceapp.servlet.SearchProductServlet;
 import com.ecommerceapp.servlet.UserServlet;
 import com.ecommerceapp.servlet.ProductServlet;
+import com.ecommerceapp.servlet.ChatServlet;
 import com.ecommerceapp.servlet.GetImageServlet;
 import com.ecommerceapp.servlet.GetOrdersCustomerServlet;
 import com.ecommerceapp.servlet.GetOrdersServlet;
@@ -82,6 +83,10 @@ public class Main {
 
         Tomcat.addServlet(context, "searchProductCustomerServlet", new SearchProductCustomerServlet());
         context.addServletMappingDecoded("/searchProductCustomerServlet", "searchProductCustomerServlet");
+
+        Tomcat.addServlet(context, "chatServlet", new ChatServlet());
+        context.addServletMappingDecoded("/chatServlet", "chatServlet");
+
 
         tomcat.start();
         System.out.println("📡 HTTP Tomcat Embedded listening on port 8080!");

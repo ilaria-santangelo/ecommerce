@@ -3,28 +3,20 @@ function sendMessage() {
     const message = messageInput.value;
     messageInput.value = '';
 
-    // Get userId and vendorId from the URL
+    // Get vendorId and customerId from the URL
     const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userId');
     const vendorId = urlParams.get('vendorId');
+    const customerId = urlParams.get('customerId');
 
     fetch('/chatServlet', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `message=${message}&userId=${userId}&vendorId=${vendorId}`,
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error(response.statusText);
-        }
-        console.log(`Message sent: ${message}`);
-        return response.json();
+        body: `message=${message}&vendorId=${vendorId}&customerId=${customerId}`,
     })
     .catch(err => console.error(err));
 }
-
-
 
 // Call receiveMessages() once when the page loads
 document.addEventListener('DOMContentLoaded', receiveMessages);
@@ -37,8 +29,6 @@ document.querySelector('#sendButton').addEventListener('click', function() {
 
 document.querySelector('#sendButton').addEventListener('click', sendMessage);
 
-
-
 function receiveMessages() {
     fetch('/chatServlet', {
         method: 'GET'
@@ -50,7 +40,6 @@ function receiveMessages() {
         return response.json();
     })
     .then(messages => {
-        console.log(`Messages received: ${JSON.stringify(messages)}`);
         const messagesContainer = document.querySelector('#messages');
         messagesContainer.innerHTML = '';
 
@@ -70,10 +59,6 @@ function receiveMessages() {
     })
     .catch(err => console.error(err));
 }
-
-
-
-
 
 // Call receiveMessages() every 5 seconds
 setInterval(receiveMessages, 5000);
