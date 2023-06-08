@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.ecommerceapp.service.ProductService;
 import com.ecommerceapp.utility.DatabaseManager;
 
 import jakarta.servlet.ServletException;
@@ -33,12 +34,15 @@ import jakarta.servlet.annotation.MultipartConfig;
 @MultipartConfig(maxFileSize = 16177215)
 @WebServlet("/ProductServlet")
 public class ProductServlet extends HttpServlet {
-
+    private ProductService productService = new ProductService();
+    
     PrintWriter out;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    
+                
         HttpSession session = request.getSession();
         int userId = (int) session.getAttribute("userId"); 
 
@@ -47,17 +51,11 @@ public class ProductServlet extends HttpServlet {
         String productPriceStr = getFieldValue(request.getPart("productPrice"));
         double productPrice = Double.parseDouble(productPriceStr);
 
-
-        System.out.println(productName);
-        System.out.println(productDescription);
-        System.out.println(productPrice);
         
-
         Part filePart = request.getPart("productImage"); // Retrieves <input type="file" name="productImage">
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
         InputStream fileContent = filePart.getInputStream();
-        System.out.println(fileName);
-
+      
         // Write the file to the server's file system
         String path = request.getServletContext().getRealPath("") + File.separator + "images";
         File uploads = new File(path);
@@ -74,31 +72,11 @@ public class ProductServlet extends HttpServlet {
         }
 
         String imagePath = fileName;
-    try{
-        Connection connection = DatabaseManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(
-            "INSERT INTO Products (vendor_id, product_name, product_description, product_price, product_image_path) VALUES (?, ?, ?, ?, ?)",
-            Statement.RETURN_GENERATED_KEYS);
 
-        preparedStatement.setInt(1, userId);
-        preparedStatement.setString(2, productName);
-        preparedStatement.setString(3, productDescription);
-        preparedStatement.setDouble(4, productPrice);
-        preparedStatement.setString(5, imagePath);
+        productService.addProduct(userId, productName, productDescription, productPrice, imagePath);
 
-        preparedStatement.executeUpdate();
-
-        ResultSet rs = preparedStatement.getGeneratedKeys();
-        if (rs.next()) {
-            int productId = rs.getInt(1);
-            response.getWriter().write(String.valueOf(productId)); // Write product ID back to client
-            response.sendRedirect(request.getContextPath() + "/src/main/webapp/views/profile.html");
-
-        }
-    } catch (SQLException ex) {
-        Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
         response.sendRedirect(request.getContextPath() + "/src/main/webapp/views/profile.html");
-    }
+
 }
 
 private String getFieldValue(Part part) throws IOException {

@@ -21,7 +21,6 @@ import com.ecommerceapp.servlet.GetOrdersCustomerServlet;
 import com.ecommerceapp.servlet.GetOrdersServlet;
 import com.ecommerceapp.servlet.GetProductServlet;
 import com.ecommerceapp.servlet.GetProductsCustomer;
-import com.ecommerceapp.servlet.GetSingleProductServlet;
 import com.ecommerceapp.servlet.OrderServlet;
 
 import java.io.File;
@@ -74,8 +73,6 @@ public class Main {
         Tomcat.addServlet(context, "getImageServlet", new GetImageServlet());
         context.addServletMappingDecoded("/getImageServlet", "getImageServlet");
 
-        Tomcat.addServlet(context, "getSingleProductServlet", new GetSingleProductServlet());
-        context.addServletMappingDecoded("/getSingleProductServlet", "getSingleProductServlet");
 
         Tomcat.addServlet(context, "orderServlet", new OrderServlet());
         context.addServletMappingDecoded("/orderServlet", "orderServlet");

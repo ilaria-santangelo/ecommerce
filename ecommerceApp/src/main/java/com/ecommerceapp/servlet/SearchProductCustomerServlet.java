@@ -32,7 +32,7 @@ public class SearchProductCustomerServlet extends HttpServlet {
                     "SELECT * FROM Products WHERE product_name LIKE '%" + query + "%'");
 
             String json = resultSetToJson(resultSet);
-            
+
             // Send JSON response
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");

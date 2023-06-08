@@ -30,11 +30,25 @@ public class SearchProductServlet extends HttpServlet {
         Connection connection = DatabaseManager.getConnection();
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(
-                    "SELECT * FROM Products WHERE vendor_id = " + userId + " AND product_name LIKE '%" + query + "%'");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Products WHERE product_name LIKE '%" + query + "%'");
 
-            String json = resultSetToJson(resultSet);
-            
+            JsonArray jsonArray = new JsonArray();
+
+            while (resultSet.next()) {
+                if (resultSet.getInt("vendor_id") == userId) {
+                    JsonObject jsonObject = new JsonObject();
+                    ResultSetMetaData metadata = resultSet.getMetaData();
+                    int columnCount = metadata.getColumnCount();
+                    for (int i = 1; i <= columnCount; i++) {
+                        String columnName = metadata.getColumnName(i);
+                        jsonObject.addProperty(columnName, resultSet.getString(i));
+                    }
+                    jsonArray.add(jsonObject);
+                }
+            }
+
+            String json = jsonArray.toString();
+
             // Send JSON response
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
@@ -43,25 +57,5 @@ public class SearchProductServlet extends HttpServlet {
             Logger.getLogger(SearchProductServlet.class.getName()).log(Level.SEVERE, null, ex);
             // Handle the error
         }
-    }
-    
-    private String resultSetToJson(ResultSet resultSet) throws SQLException {
-        JsonArray jsonArray = new JsonArray();
-    
-        ResultSetMetaData metadata = resultSet.getMetaData();
-        int columnCount = metadata.getColumnCount();
-    
-        while (resultSet.next()) {
-            JsonObject jsonObject = new JsonObject();
-            
-            for (int i = 1; i <= columnCount; i++) {
-                String columnName = metadata.getColumnName(i);
-                jsonObject.addProperty(columnName, resultSet.getString(i));
-            }
-    
-            jsonArray.add(jsonObject);
-        }
-    
-        return jsonArray.toString();
     }
 }
