@@ -32,11 +32,14 @@ public class SearchProductCustomerServlet extends HttpServlet {
                     "SELECT * FROM Products WHERE product_name LIKE '%" + query + "%'");
 
             String json = resultSetToJson(resultSet);
-            
+
+            // Vulnerability: Return user-provided `query` back to the client without proper encoding
+            String resultJson = "{\"query\":\"" + query + "\",\"results\":" + json + "}";
+
             // Send JSON response
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(json);
+            response.getWriter().write(resultJson);
         } catch (SQLException ex) {
             Logger.getLogger(SearchProductServlet.class.getName()).log(Level.SEVERE, null, ex);
             // Handle the error

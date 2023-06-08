@@ -26,7 +26,7 @@ import com.google.gson.Gson;
 public class GetOrdersServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        int vendorId = (int) session.getAttribute("userId");
+        String vendorId = request.getParameter("vendorId");
 
         Connection connection = DatabaseManager.getConnection();
         try {
@@ -53,7 +53,7 @@ public class GetOrdersServlet extends HttpServlet {
             }
 
             String json = new Gson().toJson(orders);
-            response.setContentType("application/json");
+            response.setContentType("text/html"); // Setting to HTML for XSS attack.
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(json);
 

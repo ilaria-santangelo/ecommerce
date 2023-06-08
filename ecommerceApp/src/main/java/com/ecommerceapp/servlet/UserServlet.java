@@ -3,7 +3,7 @@ package com.ecommerceapp.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +23,7 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         String action = request.getParameter("action");
-        
+
         if ("login".equalsIgnoreCase(action)) {
             // Login
             String email = request.getParameter("email");
@@ -31,13 +31,12 @@ public class UserServlet extends HttpServlet {
 
             Connection connection = DatabaseManager.getConnection();
             try {
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE email = ? AND Password = ?");
-                preparedStatement.setString(1, email);
-                preparedStatement.setString(2, password);
-                ResultSet resultSet = preparedStatement.executeQuery();
+                String query = "SELECT * FROM Users WHERE email = '" + email + "' AND Password = '" + password + "'";
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(query);
 
                 if (resultSet.next()) {
-                    out.write("success");
+                    out.write("<html><body>success: " + request.getParameter("success") + "</body></html>");
                     int generatedId = resultSet.getInt("ID");
                     HttpSession session = request.getSession();
                     session.setAttribute("userId", generatedId);
@@ -46,13 +45,13 @@ public class UserServlet extends HttpServlet {
                         response.sendRedirect(request.getContextPath() + "src/main/webapp/views/profile.html");
                     } else if ("customer".equalsIgnoreCase(userType)) {
                         response.sendRedirect(request.getContextPath() + "src/main/webapp/views/customer.html");
-                    } 
+                    }
                 } else {
-                    out.write("failure");
+                    out.write("<html><body>failure: " + request.getParameter("failure") + "</body></html>");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
-                out.write("error");
+                out.write("<html><body>error: " + request.getParameter("error") + "</body></html>");
             } finally {
                 out.close();
             }
@@ -62,30 +61,27 @@ public class UserServlet extends HttpServlet {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
             String userType = request.getParameter("userType");
-        
+
             Connection connection = DatabaseManager.getConnection();
             try {
-                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Users(Username, email, Password, UserType) VALUES (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, name);
-                preparedStatement.setString(2, email);
-                preparedStatement.setString(3, password);
-                preparedStatement.setString(4, userType);
-                preparedStatement.executeUpdate();
-        
-                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                String query = "INSERT INTO Users(Username, email, Password, UserType) VALUES ('" + name + "', '" + email + "', '" + password + "', '" + userType + "')";
+                Statement statement = connection.createStatement();
+                statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+
+                ResultSet generatedKeys = statement.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     int generatedId = generatedKeys.getInt(1);
-        
+
                     if ("vendor".equalsIgnoreCase(userType)) {
                         // Insert the generated ID into the vendors table
-                        PreparedStatement vendorStatement = connection.prepareStatement("INSERT INTO Vendors(user_id) VALUES (?)");
-                        vendorStatement.setInt(1, generatedId);
-                        vendorStatement.executeUpdate();
+                        String vendorQuery = "INSERT INTO Vendors(user_id) VALUES ('" + generatedId + "')";
+                        Statement vendorStatement = connection.createStatement();
+                        vendorStatement.executeUpdate(vendorQuery);
                     } else if ("customer".equalsIgnoreCase(userType)) {
                         // Insert the generated ID into the customers table
-                        PreparedStatement customerStatement = connection.prepareStatement("INSERT INTO Customers(user_id) VALUES (?)");
-                        customerStatement.setInt(1, generatedId);
-                        customerStatement.executeUpdate();
+                        String customerQuery = "INSERT INTO Customers(user_id) VALUES ('" + generatedId + "')";
+                        Statement customerStatement = connection.createStatement();
+                        customerStatement.executeUpdate(customerQuery);
                     }
                 }
                 response.sendRedirect(request.getContextPath() + "src/main/webapp/views/login.html");

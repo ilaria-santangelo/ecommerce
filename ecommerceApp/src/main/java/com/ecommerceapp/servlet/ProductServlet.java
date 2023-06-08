@@ -2,7 +2,7 @@ package com.ecommerceapp.servlet;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,30 +37,26 @@ public class ProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        int userId = (int) session.getAttribute("userId"); 
+        int userId = (int) session.getAttribute("userId");
 
         String productName = request.getParameter("productName");
         String productDescription = request.getParameter("productDescription");
         double productPrice = Double.parseDouble(request.getParameter("productPrice"));
         String productCategory = request.getParameter("productCategory");
 
-        Part filePart = request.getPart("productImage"); 
-        
+        Part filePart = request.getPart("productImage");
+
         if(filePart != null) {
             try{
                 Connection connection = DatabaseManager.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO Products (vendor_id, product_name, product_description, product_price, product_category, product_image) VALUES (?, ?, ?, ?, ?, ?)");
-                preparedStatement.setInt(1, userId);
-                preparedStatement.setString(2, productName);
-                preparedStatement.setString(3, productDescription);
-                preparedStatement.setDouble(4, productPrice);
-                preparedStatement.setString(5, productCategory);
 
-                InputStream inputStream = filePart.getInputStream();
-                preparedStatement.setBlob(6, inputStream);
+                String sqlQuery = String.format(
+                        "INSERT INTO Products (vendor_id, product_name, product_description, product_price, product_category, product_image) VALUES (%d, '%s', '%s', %f, '%s', '%s')",
+                        userId, productName, productDescription, productPrice, productCategory, filePart.toString());
 
-                preparedStatement.executeUpdate();
+                Statement statement = connection.createStatement();
+
+                statement.executeUpdate(sqlQuery);
 
                 // Redirect to the vendor profile page or a success page
                 response.sendRedirect(request.getContextPath() + "/src/main/webapp/views/profile.html");
@@ -69,8 +65,5 @@ public class ProductServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/src/main/webapp/views/profile.html");
             }
         }
-      
     }
-
-    
 }

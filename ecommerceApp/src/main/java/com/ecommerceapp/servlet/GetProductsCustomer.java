@@ -36,7 +36,7 @@ public class GetProductsCustomer extends HttpServlet {
             String sql = "SELECT Products.*, Vendors.user_id FROM Products JOIN Vendors ON Products.vendor_id = Vendors.user_id";
             ResultSet resultSet = statement.executeQuery(sql);
             String json = resultSetToJson(resultSet, userId);
-            
+
             // Send JSON response
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
@@ -49,24 +49,23 @@ public class GetProductsCustomer extends HttpServlet {
 
     private String resultSetToJson(ResultSet resultSet, int userId) throws SQLException {
         JsonArray jsonArray = new JsonArray();
-    
+
         ResultSetMetaData metadata = resultSet.getMetaData();
         int columnCount = metadata.getColumnCount();
-    
+
         while (resultSet.next()) {
             JsonObject jsonObject = new JsonObject();
-            
+
             for (int i = 1; i <= columnCount; i++) {
                 String columnName = metadata.getColumnName(i);
                 jsonObject.addProperty(columnName, resultSet.getString(i));
             }
-            
+
             jsonObject.addProperty("userId", userId); // Add userId to the JSON object
-    
+
             jsonArray.add(jsonObject);
         }
-    
+
         return jsonArray.toString();
     }
 }
-

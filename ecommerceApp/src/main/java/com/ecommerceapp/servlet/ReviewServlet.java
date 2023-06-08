@@ -23,14 +23,12 @@ public class ReviewServlet extends HttpServlet {
         String starRating = request.getParameter("starRating");
 
         try {
-            // Get the database connection
             Connection conn = DatabaseManager.getConnection();
 
             Statement stmt = conn.createStatement();
-            String sql = "INSERT INTO Reviews (order_item_id, review_text, star_rating) VALUES ('"
-                    + orderItemId + "', '" + reviewText + "', " + starRating + ")";
+            String sql = "INSERT INTO Reviews (order_item_id, review_text, star_rating) VALUES ("
+                    + orderItemId + ", '" + reviewText + "', " + starRating + ")";
 
-            // Update the review in the database
             int result = stmt.executeUpdate(sql);
 
             if (result > 0) {

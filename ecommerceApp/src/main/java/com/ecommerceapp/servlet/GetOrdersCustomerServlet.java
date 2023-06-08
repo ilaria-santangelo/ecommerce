@@ -32,16 +32,16 @@ public class GetOrdersCustomerServlet extends HttpServlet {
         try {
             Statement statement = connection.createStatement();
             String sql = "SELECT Orders.ID as orderId, Orders.order_date, Orders.status, " +
-            "OrderItems.ID as orderItemId, OrderItems.quantity, OrderItems.price, Products.product_name, " +
-            "Reviews.review_text, Reviews.star_rating, Reviews.reply " + // Include the reply field here
-            "FROM Orders " +
-            "INNER JOIN OrderItems ON Orders.ID = OrderItems.order_id " +
-            "INNER JOIN Products ON OrderItems.product_id = Products.ID " +
-            "LEFT JOIN Reviews ON OrderItems.ID = Reviews.order_item_id " +
-            "WHERE Orders.customer_id = " + customerId;
-        
+                    "OrderItems.ID as orderItemId, OrderItems.quantity, OrderItems.price, Products.product_name, " +
+                    "Reviews.review_text, Reviews.star_rating, Reviews.reply " +
+                    "FROM Orders " +
+                    "INNER JOIN OrderItems ON Orders.ID = OrderItems.order_id " +
+                    "INNER JOIN Products ON OrderItems.product_id = Products.ID " +
+                    "LEFT JOIN Reviews ON OrderItems.ID = Reviews.order_item_id " +
+                    "WHERE Orders.customer_id = " + customerId;
+
             ResultSet resultSet = statement.executeQuery(sql);
-            
+
             List<Map<String, Object>> orders = new ArrayList<>();
             while (resultSet.next()) {
                 Map<String, Object> order = new HashMap<>();
@@ -54,7 +54,7 @@ public class GetOrdersCustomerServlet extends HttpServlet {
                 order.put("productName", resultSet.getString("product_name"));
                 order.put("reviewText", resultSet.getString("review_text"));
                 order.put("starRating", resultSet.getInt("star_rating"));
-                order.put("reply", resultSet.getString("reply")); // Add the reply here
+                order.put("reply", resultSet.getString("reply"));
                 orders.add(order);
             }
 

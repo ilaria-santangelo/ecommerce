@@ -9,7 +9,6 @@ import jakarta.servlet.ServletException;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,12 +28,13 @@ import com.ecommerceapp.utility.DatabaseManager;
 public class OrderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
         int customerID = (int) session.getAttribute("userId");
         Gson gson = new Gson();
         Type type = new TypeToken<HashMap<Integer, Integer>>(){}.getType();
-        Map<Integer, Integer> cart = gson.fromJson(request.getReader(), type);        String orderStatus = "Pending";
+        Map<Integer, Integer> cart = gson.fromJson(request.getReader(), type);
+        String orderStatus = "Pending";
         Date orderDate = new Date(); // Current date
 
         Connection connection = DatabaseManager.getConnection();
@@ -43,13 +43,9 @@ public class OrderServlet extends HttpServlet {
             connection.setAutoCommit(false);
 
             // Create a new order
-            PreparedStatement orderStatement = connection.prepareStatement(
-                "INSERT INTO Orders (customer_id, status, order_date) VALUES (?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS);
-            orderStatement.setInt(1, customerID);
-            orderStatement.setString(2, orderStatus);
-            orderStatement.setDate(3, new java.sql.Date(orderDate.getTime()));
-            orderStatement.executeUpdate();
+            String orderQuery = "INSERT INTO Orders (customer_id, status, order_date) VALUES ('" + customerID + "', '" + orderStatus + "', '" + new java.sql.Date(orderDate.getTime()) + "')";
+            Statement orderStatement = connection.createStatement();
+            orderStatement.executeUpdate(orderQuery, Statement.RETURN_GENERATED_KEYS);
 
             // Get the ID of the new order
             ResultSet generatedKeys = orderStatement.getGeneratedKeys();
@@ -61,13 +57,9 @@ public class OrderServlet extends HttpServlet {
                 int productID = entry.getKey();
                 int quantity = entry.getValue();
 
-                PreparedStatement itemStatement = connection.prepareStatement(
-                    "INSERT INTO OrderItems (order_id, product_id, quantity) VALUES (?, ?, ?)");
-                itemStatement.setInt(1, orderID);
-                itemStatement.setInt(2, productID);
-                itemStatement.setInt(3, quantity);
-                itemStatement.executeUpdate();
-                
+                String itemQuery = "INSERT INTO OrderItems (order_id, product_id, quantity) VALUES ('" + orderID + "', '" + productID + "', '" + quantity + "')";
+                Statement itemStatement = connection.createStatement();
+                itemStatement.executeUpdate(itemQuery);
             }
 
             // Commit transaction

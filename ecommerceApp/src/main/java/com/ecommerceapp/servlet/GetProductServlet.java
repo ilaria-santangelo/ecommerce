@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 
 @WebServlet("/GetProductServlet")
 public class GetProductServlet extends HttpServlet {
@@ -29,14 +30,12 @@ public class GetProductServlet extends HttpServlet {
 
         Connection connection = DatabaseManager.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT * FROM Products WHERE vendor_id = ?");
-            preparedStatement.setInt(1, userId);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
+            Statement statement = connection.createStatement();
+            String sql = "SELECT * FROM Products WHERE vendor_id = " + userId;
+            ResultSet resultSet = statement.executeQuery(sql);
 
             String json = resultSetToJson(resultSet);
-            
+
 
             // Send JSON response
             response.setContentType("application/json");
@@ -50,21 +49,21 @@ public class GetProductServlet extends HttpServlet {
 
     private String resultSetToJson(ResultSet resultSet) throws SQLException {
         JsonArray jsonArray = new JsonArray();
-    
+
         ResultSetMetaData metadata = resultSet.getMetaData();
         int columnCount = metadata.getColumnCount();
-    
+
         while (resultSet.next()) {
             JsonObject jsonObject = new JsonObject();
-            
+
             for (int i = 1; i <= columnCount; i++) {
                 String columnName = metadata.getColumnName(i);
                 jsonObject.addProperty(columnName, resultSet.getString(i));
             }
-    
+
             jsonArray.add(jsonObject);
         }
-    
+
         return jsonArray.toString();
     }
 }

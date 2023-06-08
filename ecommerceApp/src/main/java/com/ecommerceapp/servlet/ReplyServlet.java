@@ -25,7 +25,7 @@ public class ReplyServlet extends HttpServlet {
 
             Statement stmt = conn.createStatement();
             String sql = "UPDATE Reviews SET reply = '"
-                    + replyText + "' WHERE order_item_id = '" + orderItemId + "'";
+                    + replyText + "' WHERE order_item_id = " + orderItemId;
 
             int result = stmt.executeUpdate(sql);
 
