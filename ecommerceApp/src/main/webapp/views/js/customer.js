@@ -69,7 +69,7 @@ function addToCart(product) {
     } else {
         cart.push(product);
     }
-
+    showToast()
     updateCartUI();
 }
 
@@ -217,3 +217,33 @@ function chatWithVendor(userId, vendorId) {
     alert(`User ID: ${userId}, Vendor ID: ${vendorId}`);
     window.location.href = `/src/main/webapp/views/chat.html?userId=${userId}&vendorId=${vendorId}`; 
 }
+
+
+document.getElementById('logout-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    fetch('/userServlet', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `action=logout`,
+    })
+    .then(response => window.location.href = '/src/main/webapp/views/login.html') // redirect to login page
+    .catch(err => console.error(err));
+});
+
+
+
+
+function showToast() {
+    let toast = document.querySelector('#toast');
+    toast.classList.remove('hidden');
+    toast.classList.add('visible');
+
+    setTimeout(() => {
+        toast.classList.remove('visible');
+        toast.classList.add('hidden');
+    }, 3000); // Hide after 3 seconds
+}
+
+

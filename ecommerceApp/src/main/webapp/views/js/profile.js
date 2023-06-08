@@ -14,6 +14,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     })
     .catch(err => console.error(err));
+
+
+    var logoutBtn = document.getElementById('logout-btn');
+    if(logoutBtn){
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            fetch('/UserServlet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `action=logout`,
+            })
+            .then(response => window.location.href = '/src/main/webapp/views/login.html') // redirect to login page
+            .catch(err => console.error(err));
+        });
+    }
 });
 
 
@@ -22,12 +39,9 @@ function createProductCard(product) {
     return `
         <div class="product-card">
             <img src="/getImageServlet?ID=${product.ID}">
-            <h3>${product.ID}</h3
             <h3>${product.product_name}</h3>
             <p>${product.product_description}</p>
             <p>${product.product_price}</p>
-            <button class="edit-btnn" onclick="location.href='post_product.html?ID=${product.ID}'">Edit</button>
-            <!-- Add more elements as needed... -->
             
         </div>
     `;
@@ -59,3 +73,6 @@ function searchProduct() {
     })
     .catch(err => console.error(err));
 }
+
+
+

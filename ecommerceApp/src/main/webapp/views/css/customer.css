@@ -3,33 +3,14 @@ body {
     background-color: #FAFAFA;
     box-sizing: border-box;
 }
+.cards{
+    
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: space-between;
 
-
-.sidebar {
-    background-color: #573b8a;
-    color: #fff;
-    width: 200px;
-    position: fixed;
-    height: 100vh;
-    overflow: auto;
-    padding: 20px;
 }
 
-.sidebar a {
-    color: #fff;
-    text-decoration: none;
-    display: block;
-    padding: 15px;
-    margin: 10px;
-    text-align: center;
-    border-radius: 5px;
-    background-color: #6d44b8;
-    transition: background-color 0.3s;
-}
-
-.sidebar a:hover {
-    background-color: #7744aa;
-}
 
 .main {
     padding: 20px;
@@ -202,6 +183,13 @@ body {
     cursor: not-allowed;
 }
 
+.product-card img {
+    width: 300px;
+    height: 300px; /* Adjust to your preference */
+    object-fit: cover;
+    border-radius: 5px;
+}
+
 header {
     display: flex;
     justify-content: right;
@@ -253,3 +241,95 @@ header {
     box-shadow: 0px 1px 10px 2px rgba(0,0,0,0.1);
     width: 60%;
 }
+
+#logout-btn {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 15px;
+    margin: 10px;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    background-color: #D32F2F; /* or any red shade you like */
+    border-color: #B71C1C; /* a slightly darker red for the border */
+}
+
+#logout-btn:hover {
+    background-color: #B71C1C; /* a darker red for hover effect */
+}
+
+.product-card select {
+    width: 80px; /* Adjust as needed */
+    padding: 5px 10px; /* Adjust as needed */
+    border: none; /* No border */
+    border-radius: 5px;
+    background-color: #f4f4f4;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.product-card select:hover {
+    background-color: #e0e0e0;
+    border-color: #777;
+}
+
+.product-card select:focus {
+    outline: none;
+    box-shadow: 0 0 5px #9E9E9E;
+    border-color: #333;
+}
+
+.product-card select:disabled {
+    background-color: #bdbdbd;
+    border-color: #aaa;
+    cursor: not-allowed;
+}
+
+
+
+.toast {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 20px;
+    color: #fff;
+    background-color: #333;
+    border-radius: 5px;
+    animation: toast-slide-in 0.5s forwards, toast-slide-out 0.5s 3.5s forwards, toast-remove 4s forwards;
+    opacity: 0;
+    pointer-events: none;  /* Prevent interaction with the toast when it's not visible */
+}
+
+@keyframes toast-slide-in {
+    from {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-slide-out {
+    from {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+    to {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+    }
+}
+
+@keyframes toast-remove {
+    to {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+

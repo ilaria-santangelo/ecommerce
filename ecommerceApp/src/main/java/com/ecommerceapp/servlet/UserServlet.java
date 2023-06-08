@@ -93,5 +93,13 @@ public class UserServlet extends HttpServlet {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        else if ("logout".equalsIgnoreCase(action)) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            response.sendRedirect(request.getContextPath() + "src/main/webapp/views/login.html");
+        }
+        
     }
 }
