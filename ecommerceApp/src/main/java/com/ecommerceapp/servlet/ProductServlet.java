@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.ecommerceapp.service.ProductService;
 import com.ecommerceapp.utility.DatabaseManager;
 
 import jakarta.servlet.ServletException;
@@ -31,39 +32,23 @@ import jakarta.servlet.annotation.MultipartConfig;
 @MultipartConfig(maxFileSize = 16177216)
 public class ProductServlet extends HttpServlet {
 
-    PrintWriter out;
+    private ProductService productService = new ProductService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        int userId = (int) session.getAttribute("userId");
+        int vendorId = (int) session.getAttribute("userId");
 
-        String productName = request.getParameter("productName");
-        String productDescription = request.getParameter("productDescription");
-        double productPrice = Double.parseDouble(request.getParameter("productPrice"));
-        String productCategory = request.getParameter("productCategory");
+        String name = request.getParameter("productName");
+        String description = request.getParameter("productDescription");
+        double price = Double.parseDouble(request.getParameter("productPrice"));
+        String category = request.getParameter("productCategory");
+        Part imagePart = request.getPart("productImage");
+        String image = imagePart.toString();
 
-        Part filePart = request.getPart("productImage");
+        productService.addProduct(vendorId, name, description, price, category, image);
 
-        if(filePart != null) {
-            try{
-                Connection connection = DatabaseManager.getConnection();
-
-                String sqlQuery = String.format(
-                        "INSERT INTO Products (vendor_id, product_name, product_description, product_price, product_category, product_image) VALUES (%d, '%s', '%s', %f, '%s', '%s')",
-                        userId, productName, productDescription, productPrice, productCategory, filePart.toString());
-
-                Statement statement = connection.createStatement();
-
-                statement.executeUpdate(sqlQuery);
-
-                // Redirect to the vendor profile page or a success page
-                response.sendRedirect(request.getContextPath() + "/src/main/webapp/views/profile.html");
-            } catch (SQLException ex) {
-                Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
-                response.sendRedirect(request.getContextPath() + "/src/main/webapp/views/profile.html");
-            }
-        }
+        response.sendRedirect(request.getContextPath() + "/src/main/webapp/views/profile.html");
     }
 }

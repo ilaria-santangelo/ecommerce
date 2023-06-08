@@ -1,5 +1,6 @@
 package com.ecommerceapp.servlet;
 
+import com.ecommerceapp.service.OrderService;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,66 +27,35 @@ import com.ecommerceapp.utility.DatabaseManager;
 
 @WebServlet("/OrderServlet")
 public class OrderServlet extends HttpServlet {
+    private OrderService orderService = new OrderService();
+    private Gson gson = new Gson();
+    private Type type = new TypeToken<HashMap<Integer, Integer>>(){}.getType();
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        int customerID = (int) session.getAttribute("userId");
-        Gson gson = new Gson();
-        Type type = new TypeToken<HashMap<Integer, Integer>>(){}.getType();
-        Map<Integer, Integer> cart = gson.fromJson(request.getReader(), type);
-        String orderStatus = "Pending";
-        Date orderDate = new Date(); // Current date
+        int customerId = (int) session.getAttribute("userId");
+        Map<Integer, Integer> items = gson.fromJson(request.getReader(), type);
 
-        Connection connection = DatabaseManager.getConnection();
         try {
-            // Begin transaction
-            connection.setAutoCommit(false);
-
             // Create a new order
-            String orderQuery = "INSERT INTO Orders (customer_id, status, order_date) VALUES ('" + customerID + "', '" + orderStatus + "', '" + new java.sql.Date(orderDate.getTime()) + "')";
-            Statement orderStatement = connection.createStatement();
-            orderStatement.executeUpdate(orderQuery, Statement.RETURN_GENERATED_KEYS);
+            Date utilDate = new Date();
+            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
-            // Get the ID of the new order
-            ResultSet generatedKeys = orderStatement.getGeneratedKeys();
-            generatedKeys.next();
-            int orderID = generatedKeys.getInt(1);
+            int orderId = orderService.createOrder(customerId, "Pending", sqlDate);
 
             // Insert all the items in the cart into the OrderItems table
-            for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
-                int productID = entry.getKey();
-                int quantity = entry.getValue();
-
-                String itemQuery = "INSERT INTO OrderItems (order_id, product_id, quantity) VALUES ('" + orderID + "', '" + productID + "', '" + quantity + "')";
-                Statement itemStatement = connection.createStatement();
-                itemStatement.executeUpdate(itemQuery);
-            }
-
-            // Commit transaction
-            connection.commit();
+            orderService.addItemsToOrder(orderId, items);
 
             // Clear the cart
-            cart.clear();
-            session.setAttribute("cart", cart);
+            items.clear();
+            session.setAttribute("cart", items);
 
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (SQLException ex) {
-            // If any error occurs, rollback changes
-            try {
-                connection.rollback();
-            } catch (SQLException rollEx) {
-                Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, rollEx);
-            }
-
             Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, e);
-            }
         }
     }
 }

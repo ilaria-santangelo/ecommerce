@@ -3,52 +3,53 @@ package com.ecommerceapp.service;
 import com.ecommerceapp.model.User;
 import com.ecommerceapp.utility.DatabaseManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class UserService {
 
-    private Connection connection;
+    public User login(String email, String password) {
+        User user = null;
+        try {
+            Connection connection = DatabaseManager.getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Users WHERE email = '" + email + "' AND Password = '" + password + "'");
 
-    public UserService() {
-        this.connection = DatabaseManager.getConnection();
-    }
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getInt("ID"));
+                user.setUsername(resultSet.getString("Username"));
+                user.setEmail(resultSet.getString("email"));
+                user.setPassword(resultSet.getString("Password"));
+                user.setUserType(resultSet.getString("UserType"));
+            }
 
-    public User createUser(String username, String email, String password, String userType, String bio) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Users(Username, email, Password, UserType, Bio) VALUES (?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, username);
-        preparedStatement.setString(2, email);
-        preparedStatement.setString(3, password);
-        preparedStatement.setString(4, userType);
-        preparedStatement.setString(5, bio);
-        preparedStatement.executeUpdate();
-
-        ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-        if (generatedKeys.next()) {
-            int generatedId = generatedKeys.getInt(1);
-            return new User(username, email, password, userType, bio);
-        } else {
-            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return user;
     }
 
-    public User getUser(String email, String password) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE email = ? AND Password = ?");
-        preparedStatement.setString(1, email);
-        preparedStatement.setString(2, password);
-        ResultSet resultSet = preparedStatement.executeQuery();
+    public User signup(String username, String email, String password, String userType) {
+        User user = null;
+        try {
+            Connection connection = DatabaseManager.getConnection();
+            Statement statement = connection.createStatement();
+            int result = statement.executeUpdate("INSERT INTO Users(Username, email, Password, UserType) VALUES ('" + username + "', '" + email + "', '" + password + "', '" + userType + "')", Statement.RETURN_GENERATED_KEYS);
 
-        if (resultSet.next()) {
-            String username = resultSet.getString("Username");
-            String userType = resultSet.getString("UserType");
-            String bio = resultSet.getString("Bio");
-            return new User(username, email, password, userType, bio);
-        } else {
-            return null;
+            if (result > 0) {
+                ResultSet generatedKeys = statement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    user = new User();
+                    user.setId(generatedKeys.getInt(1));
+                    user.setUsername(username);
+                    user.setEmail(email);
+                    user.setPassword(password);
+                    user.setUserType(userType);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return user;
     }
-
-    // Additional methods can be added here as per your requirements...
 }

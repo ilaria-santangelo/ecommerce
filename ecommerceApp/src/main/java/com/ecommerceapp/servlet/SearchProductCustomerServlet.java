@@ -33,13 +33,10 @@ public class SearchProductCustomerServlet extends HttpServlet {
 
             String json = resultSetToJson(resultSet);
 
-            // Vulnerability: Return user-provided `query` back to the client without proper encoding
-            String resultJson = "{\"query\":\"" + query + "\",\"results\":" + json + "}";
-
             // Send JSON response
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(resultJson);
+            response.getWriter().write(json);
         } catch (SQLException ex) {
             Logger.getLogger(SearchProductServlet.class.getName()).log(Level.SEVERE, null, ex);
             // Handle the error
