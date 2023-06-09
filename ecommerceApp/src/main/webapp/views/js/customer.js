@@ -214,7 +214,6 @@ function searchProduct() {
 
 
 function chatWithVendor(userId, vendorId) {
-    alert(`User ID: ${userId}, Vendor ID: ${vendorId}`);
     window.location.href = `/src/main/webapp/views/chat.html?userId=${userId}&vendorId=${vendorId}`; 
 }
 
